@@ -1,0 +1,11 @@
+node_modules
+package-lock.json
+
+.env
+
+client/bundle
+views
+server/db
+server/dbfile
+server/sessions
+ex
