@@ -5,7 +5,8 @@ const { CleanWebpackPlugin } = require("clean-webpack-plugin");
 
 const appConfig = {
   entry: {
-    app: "./src/client/app.ts"
+    app: "./src/client/app.ts",
+    home: "./src/client/home.ts"
   },
   entries: {
     app: {
@@ -13,6 +14,12 @@ const appConfig = {
       filename: "app.ejs",
       template: "app.ejs",
       chunks: ["app"]
+    },
+    home: {
+      title: "home",
+      filename: "home.ejs",
+      template: "home.ejs",
+      chunks: ["home"]
     }
   }
 };
@@ -50,6 +57,9 @@ module.exports = {
     clean: true
   },
   plugins,
+  resolve: {
+    extensions: [".ts", ".js", ".scss"]
+  },
   module: {
     rules: [
       {

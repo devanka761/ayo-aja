@@ -1,38 +1,26 @@
 import crypto, { Cipher, Decipher } from "crypto";
-
-export interface KiriminObject {
-  id: string
-  data?: object | null | undefined
-}
+import { RepBack } from "../types/helper.type";
+import cfg from "./cfg";
 
 export const peerKey: string = crypto.randomBytes(16).toString("hex");
 
+export const isProd: boolean = cfg.APP_PRODUCTION?.toString() === "true";
+
 export function genPeer(): string {
-  console.log(process.env.CHAT_KEY);
   return crypto.randomBytes(8).toString("hex") + Date.now().toString(36);
 }
 
-type RepBack = {
-  ok: boolean
-  code: number
-  msg: string
-  data?: object | null
-}
+export function rep(options: {ok?:boolean,code:number,data?:object|null,msg?:string} = { ok: false, code: 400, data:null }): RepBack {
+  const repdata: RepBack = Object.assign({},{
+    ok: false,
+    code: 400,
+    msg: "ERROR"
+  },
+  typeof options === "string" ? {} : options);
+  if(options.data && typeof options.data === "object") repdata.data = options.data;
+  if(options.code === 200) repdata.ok = true;
 
-export function rep(code:number = 400, msg:string|null, s:object|null): RepBack {
-  if(typeof msg !== "string") {
-    s = msg;
-    msg = null;
-  }
-
-  const data: RepBack = {
-    ok: code >= 400 ? false : true,
-    code: code,
-    msg: msg ? msg : (code >= 400 ? "ERROR" : "OK"),
-    data: s || null
-  };
-
-  return data;
+  return repdata;
 }
 
 export function rString(n:number = 8): string {
@@ -46,7 +34,7 @@ export function rNumber(n:number = 6): number {
 }
 
 export function encryptData(plaintext:string): string {
-  const chatkey: Buffer = Buffer.from(process.env.CHAT_KEY || "CHAT_KEY", 'hex');
+  const chatkey: Buffer = Buffer.from(cfg.CHAT_KEY as string, 'hex');
   const iv: Buffer = crypto.randomBytes(16);
   const cipher: Cipher = crypto.createCipheriv('aes-256-cbc', chatkey, iv);
   const encrypted: string = cipher.update(plaintext, 'utf-8', 'hex');
@@ -55,7 +43,7 @@ export function encryptData(plaintext:string): string {
 }
 
 export function decryptData(ciphertext:string): string {
-  const chatkey: Buffer = Buffer.from(process.env.CHAT_KEY || "CHAT_KEY", 'hex');
+  const chatkey: Buffer = Buffer.from(cfg.CHAT_KEY as string, 'hex');
   const [ivHex, encrypted]: string[] = ciphertext.split(':');
   const iv: Buffer = Buffer.from(ivHex, 'hex');
   const decipher: Decipher = crypto.createDecipheriv('aes-256-cbc', chatkey, iv);

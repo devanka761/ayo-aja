@@ -1,3 +1,7 @@
 import "../../client/scss/app.scss";
+import Init from "./pages/Init";
 
-console.log("testing");
+window.onload = () => {
+  const init: Init = new Init();
+  init.run();
+}

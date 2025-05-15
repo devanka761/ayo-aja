@@ -1,14 +1,16 @@
 process.env['NODE_TLS_REJECT_UNAUTHORIZED'] = "0";
-import dotenv from "dotenv";
-dotenv.config();
 import fs from "fs";
 import express, { Application, Request, Response } from "express";
 import session from "express-session";
 import SessionFileStore, { FileStore } from "session-file-store";
 import { ExpressPeerServer } from "peer";
-import { KiriminObject, peerKey } from "./ts/helper";
-import db from "./ts/db";
-import xcloud from "./ts/handler/xcloud";
+import authRouter from "./routes/auth.route";
+import { peerKey } from "./main/helper";
+import db from "./main/db";
+import xcloud from "./main/handler/xcloud";
+import { sessionUserBinder } from "./main/binder";
+import { KiriminObject } from "./types/helper.type";
+import cfg from "./main/cfg";
 
 declare module "peer" {
   interface IMessage {
@@ -29,25 +31,32 @@ const app: Application = express();
 const SessionFiles: FileStore = SessionFileStore(session);
 
 app.use(session({
-  secret: process.env.SESSION_SECRET || "SESSION_SECRET",
+  secret: cfg.SESSION_SECRET as string,
   resave: false,
   saveUninitialized: false,
   cookie: { maxAge: (1000 * 60 * 60 * 24 * 30), sameSite: "strict" },
   store: new SessionFiles({ path: "./server/sessions", logFn() {} })
-}))
+}));
+
+app.use(sessionUserBinder);
 
 app.use(express.static("client"));
 app.set("view engine", "ejs");
 
-const port: number = Number(process.env.APP_PORT || "7000");
+const PORT: number = cfg.APP_PORT as number;
 
-app.get("/", (_, res: Response) => {
+app.use("/x/auth", authRouter);
+
+app.get("/app", (req: Request, res: Response) => {
   res.render("app");
 });
+app.get("/", (_, res: Response) => {
+  res.render("home");
+});
 
-const appService = app.listen(port, () => {
-  console.log(`ONLINE >> http://localhost:${process.env.APP_PORT}/app`);
-  console.log(`PEERS >> http://localhost:${process.env.APP_PORT}/cloud/${peerKey}/peers`);
+const appService = app.listen(PORT, () => {
+  console.log(`ONLINE >> http://localhost:${PORT}/app`);
+  console.log(`PEERS >> http://localhost:${PORT}/cloud/${peerKey}/peers`);
 });
 
 const server = ExpressPeerServer(appService, {

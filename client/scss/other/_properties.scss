@@ -22,10 +22,10 @@ $bg: #3f464e;
     border-radius: 20px;
     animation: slide_down_in 0.5s;
     .spinner {
-      font-size: 2rem;
+      font-size: 2em;
     }
     p {
-      font-size: 1.5rem;
+      font-size: 1.5em;
     }
   }
   &.out {
@@ -59,7 +59,7 @@ $bg: #3f464e;
     justify-content: center;
     align-items: center;
     p {
-      font-size: 1.5rem;
+      font-size: 1.5em;
     }
   }
   &.out {
@@ -74,7 +74,7 @@ $bg: #3f464e;
   top: 0;left: 0;
   width: 100%;
   height: 100%;
-  background-color: #1E1F2280;
+  background-color: rgba($color: v.$card_primary, $alpha: 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -83,17 +83,24 @@ $bg: #3f464e;
     padding: 20px;
     width: calc(100% - 40px);
     max-width: 500px;
+    max-height: calc(100% - 40px);
+    overflow-y: auto;
+    scrollbar-width: thin;
     background-color: $bg;
     border-radius: 10px;
     box-shadow: 0 0 10px v.$black;
     animation: popup_in 0.5s;
-    .icons {
+    .ic {
       font-size: 2.2em;
     }
-    .messages {
+    .inf {
       margin: 20px 0;
       font-weight: 300;
-      font-size: 1.2em;
+      font-size: 1.25em;
+      a {
+        color: v.$yellow;
+        text-decoration: none;
+      }
       p {
         word-break: break-all;
         word-break: break-word;
@@ -106,20 +113,12 @@ $bg: #3f464e;
         border-radius: 5px;
         background-color: v.$card_secondary;
         color: v.$white;
-        font-size: 1rem;
+        font-size: 1em;
       }
       input[type="text"] {
         text-align: center;
       }
-      img {
-        display: block;
-        margin: 0 auto;
-        max-width: 200px;
-        max-height: 200px;
-        margin-top: 10px;
-        border: 1px solid v.$blurple;
-      }
-      .radioform {
+      .modal-radio-form {
         width: 100%;
         margin-top: 10px;
         .radio {
@@ -177,7 +176,7 @@ $bg: #3f464e;
         background-color: v.$bar_active;
       }
     }
-    .actions {
+    .acts {
       display: flex;
       justify-content: space-between;
       gap: 10px;
@@ -187,7 +186,7 @@ $bg: #3f464e;
         align-content: center;
         padding: 10px;
         border-radius: 5px;
-        font-size: 0.9rem;
+        font-size: 0.9em;
         font-weight: bold;
         color: v.$white;
       }
@@ -198,14 +197,14 @@ $bg: #3f464e;
         background-color: v.$blurple;
       }
     }
-    .action {
+    .act {
       .btn-ok {
         width: 100%;
         text-align: center;
         align-content: center;
         padding: 10px;
         border-radius: 5px;
-        font-size: 0.9rem;
+        font-size: 0.9em;
         font-weight: bold;
         color: v.$white;
         background-color: v.$blurple;
@@ -242,7 +241,7 @@ $bg: #3f464e;
     border-right: 1px solid CurrentColor;
     padding-right: 10px;
     .icon {
-      font-size: 2.2rem;
+      font-size: 2.2em;
       img {
         width: 44px;
         height: 44px;
@@ -268,7 +267,7 @@ $bg: #3f464e;
     }
   }
   .close {
-    font-size: 2.2rem;
+    font-size: 2.2em;
   }
   &.out {
     animation: slide_down_out 0.5s forwards;
@@ -332,7 +331,7 @@ $bg: #3f464e;
           font-weight: bold;
         }
         .username {
-          font-size: 0.8rem;
+          font-size: 0.8em;
         }
       }
     }
@@ -404,7 +403,7 @@ $bg: #3f464e;
       .calltype {
         margin: 0;
         animation: none;
-        font-size: 1.25rem;
+        font-size: 1.25em;
         span {
           display: none;
         }
